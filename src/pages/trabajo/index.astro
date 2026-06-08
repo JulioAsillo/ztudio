@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const proyectos = (await getCollection('proyectos')).sort(
+  (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf()
+);
+---
+
+<BaseLayout title="Trabajo | ztudio" description="Selección de proyectos del estudio ztudio.">
+  <section class="pt-40 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <h1 class="font-headline-lg text-headline-lg mb-16 reveal">Todo el Trabajo</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {
+        proyectos.map((proyecto) => (
+          <a href={`/trabajo/${proyecto.slug}`} class="group cursor-pointer reveal">
+            <div class="relative overflow-hidden rounded-xl aspect-[4/3] mb-6 bg-surface-container">
+              <img
+                src={proyecto.data.media}
+                alt={proyecto.data.titulo}
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+            </div>
+            <span class="text-primary-fixed font-label-sm text-label-sm uppercase tracking-widest">
+              {proyecto.data.categoria}
+            </span>
+            <h4 class="text-2xl font-bold mt-2">{proyecto.data.titulo}</h4>
+            <p class="text-on-surface-variant mt-2">{proyecto.data.descripcion}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

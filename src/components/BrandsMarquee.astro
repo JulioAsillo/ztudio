@@ -1,0 +1,60 @@
+---
+import { marcas } from '../data/marcas';
+// Duplicamos la lista para que el loop sea continuo (sin salto)
+const base = [...marcas, ...marcas, ...marcas];
+const loop = [...base, ...base];
+---
+
+<section class="py-20 border-y border-outline-variant/10 overflow-hidden">
+  <p class="text-center text-label-sm font-label-sm uppercase tracking-[0.3em] text-on-surface-variant mb-10">
+    Marcas que confían en nosotros
+  </p>
+
+  <div class="marquee group">
+    <div class="marquee-track">
+      {
+        loop.map((marca) => (
+          <img
+            src={marca.logo}
+            alt={marca.nombre}
+            class="h-10 md:h-12 w-auto object-contain opacity-50 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee {
+    width: 100%;
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    width: max-content;
+    animation: marquee-scroll 30s linear infinite;
+  }
+  /* Pausa el loop al pasar el mouse */
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  /* Respeta usuarios con movimiento reducido */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+</style>

@@ -1,0 +1,121 @@
+---
+import ServiceCard from './ServiceCard.astro';
+import { servicios } from '../data/servicios';
+---
+
+<section id="services" class="py-32 px-margin-mobile md:px-margin-desktop">
+  <div class="max-w-container-max 3x1:max-w-[1800px] mx-auto">
+    <!-- Encabezado -->
+    <div class="mb-16 reveal">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        <div>
+          <span class="text-primary-fixed font-label-sm text-label-sm tracking-[0.2em] uppercase block mb-4">
+            Expertise
+          </span>
+          <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-none">Nuestros Servicios</h2>
+        </div>
+        <p class="text-on-surface-variant max-w-md font-body-md">
+          Especializados en elevar marcas que no temen destacar a través de la innovación constante.
+        </p>
+      </div>
+    </div>
+
+    <!-- Carrusel con flechas en los bordes -->
+    <div class="relative group/carousel">
+      <!-- Pista -->
+      <div
+        id="services-track"
+        class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6
+               [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
+               cursor-grab active:cursor-grabbing"
+      >
+        {
+          servicios.map((servicio) => (
+            <div class="snap-start shrink-0 w-[80%] sm:w-[45%] lg:w-[31%] xl:w-[23%] 3xl:w-[18.5%] reveal">
+              <ServiceCard {...servicio} />
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- Degradados sutiles en los bordes -->
+      <div class="hidden md:block absolute left-0 top-0 bottom-6 w-20 bg-gradient-to-r from-background to-transparent pointer-events-none z-[5]"></div>
+      <div class="hidden md:block absolute right-0 top-0 bottom-6 w-20 bg-gradient-to-l from-background to-transparent pointer-events-none z-[5]"></div>
+
+      <!-- Flecha izquierda (invisible hasta hover) -->
+      <button
+        id="services-prev"
+        aria-label="Anterior"
+        class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
+               w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
+               items-center justify-center text-on-surface
+               opacity-0 group-hover/carousel:opacity-100 transition-all
+               hover:bg-primary-container hover:text-on-primary hover:border-primary-container"
+      >
+        <span class="material-symbols-outlined">west</span>
+      </button>
+
+      <!-- Flecha derecha (invisible hasta hover) -->
+      <button
+        id="services-next"
+        aria-label="Siguiente"
+        class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
+               w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
+               items-center justify-center text-on-surface
+               opacity-0 group-hover/carousel:opacity-100 transition-all
+               hover:bg-primary-container hover:text-on-primary hover:border-primary-container"
+      >
+        <span class="material-symbols-outlined">east</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const track = document.getElementById('services-track');
+  const prev = document.getElementById('services-prev');
+  const next = document.getElementById('services-next');
+
+  if (track) {
+    // Arrastrar con el mouse
+    let isDown = false, startX = 0, scrollLeft = 0;
+    track.addEventListener('pointerdown', (e) => {
+      isDown = true;
+      startX = e.pageX;
+      scrollLeft = track.scrollLeft;
+      track.setPointerCapture(e.pointerId);
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      track.scrollLeft = scrollLeft - (e.pageX - startX);
+    });
+    const stop = () => (isDown = false);
+    track.addEventListener('pointerup', stop);
+    track.addEventListener('pointerleave', stop);
+
+    // Cuánto avanzar por clic
+    const amount = () => {
+      const card = track.querySelector('div');
+      return card ? card.clientWidth + 24 : track.clientWidth * 0.8; // 24 = gap-6
+    };
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+    // Flecha derecha: si está al final, vuelve al inicio (loop)
+    next?.addEventListener('click', () => {
+      if (track.scrollLeft >= maxScroll() - 5) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: amount(), behavior: 'smooth' });
+      }
+    });
+
+    // Flecha izquierda: si está al inicio, salta al final (loop)
+    prev?.addEventListener('click', () => {
+      if (track.scrollLeft <= 5) {
+        track.scrollTo({ left: maxScroll(), behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: -amount(), behavior: 'smooth' });
+      }
+    });
+  }
+</script>

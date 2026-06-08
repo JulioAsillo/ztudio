@@ -1,0 +1,60 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  items: string[];
+}
+
+const { icon, title, description, items } = Astro.props;
+---
+
+<!--
+  Tarjeta de servicio.
+  En reposo: glass oscuro. Al hover/touch: invierte a verde solido (negativo).
+  El efecto se logra con group-hover sobre cada elemento de texto.
+-->
+<article
+  tabindex="0"
+  class="glass-card p-10 rounded-xl group transition-all duration-500 cursor-pointer
+         hover:bg-primary-container focus:bg-primary-container
+         hover:border-primary-container focus:border-primary-container
+         hover:shadow-[0_0_40px_rgba(108,188,136,0.35)]
+         h-full flex flex-col"
+>
+  <div
+    class="w-14 h-14 rounded-lg flex items-center justify-center mb-8 transition-colors
+           bg-surface-container-highest group-hover:bg-on-primary/10 group-focus:bg-on-primary/10"
+  >
+    <span
+      class="material-symbols-outlined text-3xl text-primary-fixed
+             group-hover:text-on-primary group-focus:text-on-primary transition-colors"
+      >{icon}</span
+    >
+  </div>
+
+  <h3
+    class="font-headline-md text-headline-md mb-4 transition-colors
+           group-hover:text-on-primary group-focus:text-on-primary"
+  >
+    {title}
+  </h3>
+
+  <p
+    class="text-on-surface-variant mb-8 transition-colors
+           group-hover:text-on-primary/80 group-focus:text-on-primary/80"
+  >
+    {description}
+  </p>
+
+  <ul class="space-y-3 text-label-sm font-label-sm text-on-surface/60 mt-auto">
+    {
+      items.map((item) => (
+        <li class="flex items-center gap-2 transition-colors group-hover:text-on-primary/70 group-focus:text-on-primary/70">
+          <span class="w-1 h-1 rounded-full bg-primary-fixed group-hover:bg-on-primary group-focus:bg-on-primary transition-colors" />
+          {item}
+        </li>
+      ))
+    }
+  </ul>
+</article>
