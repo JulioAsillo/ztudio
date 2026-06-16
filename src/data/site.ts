@@ -18,7 +18,7 @@ export const site = {
 
   // --- Logo (header) ---
   // Coloca el archivo en: public/images/logo.svg  (o .png)
-  logo: '/images/logo.svg',
+  logo: '/images/logossinfondo.png',
 };
 
 // URL final del boton de WhatsApp (no editar)

@@ -10,27 +10,33 @@ const links = [
 ---
 
 <nav class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-outline-variant/20" style="background-color: rgba(11, 11, 11, 0.5);">
-  <div  class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 max-w-container-max mx-auto">
-    <!-- Logo. Archivo en: public/images/logo.svg -->
+  <div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 3xl:h-24 max-w-container-max mx-auto">
     <a href="/" class="flex items-center">
-      <img src={site.logo} alt="ztudio" class="h-8 w-auto" />
+      <img
+          src={site.logo}
+          alt="ztudio"
+          class="h-9 3xl:h-11 w-auto"
+          width="160"
+          height="44"
+          decoding="async"
+      />
     </a>
 
     <div class="hidden md:flex gap-10">
       {
         links.map((link) => (
-          <a
-            href={link.href}
-            class="text-on-surface-variant font-medium hover:text-primary-fixed transition-colors"
-          >
-            {link.label}
-          </a>
+            <a
+                href={link.href}
+                class="text-on-surface-variant font-medium hover:text-primary-fixed transition-colors"
+            >
+              {link.label}
+            </a>
         ))
       }
     </div>
 
     <button
-      class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-bold transition-transform scale-95 active:scale-90 hover:bg-primary-fixed duration-300"
+        class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-bold transition-transform scale-95 active:scale-90 hover:bg-primary-fixed duration-300"
     >
       Let's Talk
     </button>

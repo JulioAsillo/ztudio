@@ -6,6 +6,10 @@ import containerQueries from '@tailwindcss/container-queries';
 //  BRANDBOOK ztudio
 //  Paleta:  #0b0b0b negro - #2a2a2a gris - #f6f6f6 blanco - #6cbc88 verde
 //  Fuentes: Alfa Slab One (display) - Montserrat (familia)
+//
+//  ESCALADO FLUIDO (2K/4K): los fontSize usan clamp(min, vw, max).
+//  El valor 'vw' del medio controla cuanto crece al agrandar la pantalla.
+//  Sube ese vw si quieres texto aun mas grande en monitores grandes.
 // ============================================================
 
 export default {
@@ -68,12 +72,14 @@ export default {
       },
       spacing: {
         gutter: '24px',
-        'margin-desktop': '64px',
+        // Margen lateral fluido: 64px en desktop normal, crece hasta 160px en 4K
+        'margin-desktop': 'clamp(64px, 6vw, 160px)',
         'margin-mobile': '20px',
         unit: '8px',
       },
       maxWidth: {
-        'container-max': '1440px',
+        // Contenedor mas ancho para aprovechar 2K/4K (antes 1440 = se veia chico)
+        'container-max': '1760px',
       },
       fontFamily: {
         'display-xl': ['"Alfa Slab One"', 'serif'],
@@ -85,17 +91,19 @@ export default {
         'label-sm': ['Montserrat', 'sans-serif'],
       },
       fontSize: {
-        'display-xl': ['80px', { lineHeight: '88px', letterSpacing: '-0.02em', fontWeight: '400' }],
-        'headline-lg': ['48px', { lineHeight: '54px', letterSpacing: '-0.01em', fontWeight: '400' }],
-        'headline-lg-mobile': ['32px', { lineHeight: '38px', letterSpacing: '-0.01em', fontWeight: '400' }],
-        'headline-md': ['30px', { lineHeight: '38px', fontWeight: '700' }],
-        'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
-        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
-        'label-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.1em', fontWeight: '600' }],
+        // min  | crecimiento (vw) | max
+        'display-xl': ['clamp(44px, 7vw, 150px)', { lineHeight: '1.05', letterSpacing: '-0.02em', fontWeight: '400' }],
+        'headline-lg': ['clamp(40px, 4.5vw, 96px)', { lineHeight: '1.08', letterSpacing: '-0.01em', fontWeight: '400' }],
+        'headline-lg-mobile': ['clamp(30px, 6vw, 44px)', { lineHeight: '1.12', letterSpacing: '-0.01em', fontWeight: '400' }],
+        'headline-md': ['clamp(24px, 2vw, 40px)', { lineHeight: '1.25', fontWeight: '700' }],
+        'body-md': ['clamp(15px, 1vw, 19px)', { lineHeight: '1.55', fontWeight: '400' }],
+        'body-lg': ['clamp(17px, 1.2vw, 24px)', { lineHeight: '1.6', fontWeight: '400' }],
+        'label-sm': ['clamp(11px, 0.8vw, 14px)', { lineHeight: '1.3', letterSpacing: '0.1em', fontWeight: '600' }],
       },
-      screens:{
-        '3x1': '1920px',
-      }
+      screens: {
+        '3xl': '1920px',
+        '4xl': '2560px',
+      },
     },
   },
   plugins: [forms, containerQueries],

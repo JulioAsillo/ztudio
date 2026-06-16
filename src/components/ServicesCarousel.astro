@@ -4,7 +4,7 @@ import { servicios } from '../data/servicios';
 ---
 
 <section id="services" class="py-32 px-margin-mobile md:px-margin-desktop">
-  <div class="max-w-container-max 3x1:max-w-[1800px] mx-auto">
+  <div class="max-w-container-max 3xl:max-w-[1800px] mx-auto">
     <!-- Encabezado -->
     <div class="mb-16 reveal">
       <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
@@ -21,16 +21,16 @@ import { servicios } from '../data/servicios';
     <div class="relative group/carousel">
       <!-- Pista -->
       <div
-        id="services-track"
-        class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6
+          id="services-track"
+          class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6
                [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
                cursor-grab active:cursor-grabbing"
       >
         {
           servicios.map((servicio) => (
-            <div class="snap-start shrink-0 w-[80%] sm:w-[45%] lg:w-[31%] xl:w-[23%] 3xl:w-[18.5%] reveal">
-              <ServiceCard {...servicio} />
-            </div>
+              <div class="snap-start shrink-0 w-[80%] sm:w-[45%] lg:w-[31%] xl:w-[23%] 3xl:w-[18.5%] reveal">
+                <ServiceCard {...servicio} />
+              </div>
           ))
         }
       </div>
@@ -41,9 +41,9 @@ import { servicios } from '../data/servicios';
 
       <!-- Flecha izquierda (invisible hasta hover) -->
       <button
-        id="services-prev"
-        aria-label="Anterior"
-        class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
+          id="services-prev"
+          aria-label="Anterior"
+          class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
                w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
                items-center justify-center text-on-surface
                opacity-0 group-hover/carousel:opacity-100 transition-all
@@ -54,9 +54,9 @@ import { servicios } from '../data/servicios';
 
       <!-- Flecha derecha (invisible hasta hover) -->
       <button
-        id="services-next"
-        aria-label="Siguiente"
-        class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
+          id="services-next"
+          aria-label="Siguiente"
+          class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
                w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
                items-center justify-center text-on-surface
                opacity-0 group-hover/carousel:opacity-100 transition-all
@@ -90,14 +90,14 @@ import { servicios } from '../data/servicios';
     track.addEventListener('pointerup', stop);
     track.addEventListener('pointerleave', stop);
 
-    // Cuánto avanzar por clic
+    // Cuanto avanzar por clic
     const amount = () => {
       const card = track.querySelector('div');
       return card ? card.clientWidth + 24 : track.clientWidth * 0.8; // 24 = gap-6
     };
     const maxScroll = () => track.scrollWidth - track.clientWidth;
 
-    // Flecha derecha: si está al final, vuelve al inicio (loop)
+    // Flecha derecha: si esta al final, vuelve al inicio (loop)
     next?.addEventListener('click', () => {
       if (track.scrollLeft >= maxScroll() - 5) {
         track.scrollTo({ left: 0, behavior: 'smooth' });
@@ -106,7 +106,7 @@ import { servicios } from '../data/servicios';
       }
     });
 
-    // Flecha izquierda: si está al inicio, salta al final (loop)
+    // Flecha izquierda: si esta al inicio, salta al final (loop)
     prev?.addEventListener('click', () => {
       if (track.scrollLeft <= 5) {
         track.scrollTo({ left: maxScroll(), behavior: 'smooth' });

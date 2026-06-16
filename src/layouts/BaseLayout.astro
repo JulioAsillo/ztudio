@@ -25,7 +25,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Deteccion de entorno: marca .js y .save-data antes del paint -->
   <script is:inline>
     document.documentElement.classList.add('js');
     const c = navigator.connection;
@@ -37,23 +36,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="canonical" href={canonicalURL} />
 
-  <!-- SEO básico -->
   <title>{title}</title>
   <meta name="description" content={description} />
 
-  <!-- Open Graph (compartir en redes / WhatsApp / LinkedIn) -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:image" content={new URL(image, Astro.site)} />
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
 
-  <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -80,20 +75,23 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 <Cursor />
 
-<!-- Scroll reveal + smooth scroll (JS nativo, sin framework) -->
 <script>
+  // Observa tanto .reveal (fade+subir) como .card-wipe (clip desde esquina)
   const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('active');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.15 }
   );
 
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  document
+    .querySelectorAll('.reveal, .card-wipe')
+    .forEach((el) => observer.observe(el));
 
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', function (this: HTMLAnchorElement, e) {

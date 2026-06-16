@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const proyectos = (await getCollection('proyectos')).sort(
+    (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf()
+);
+---
+
+<BaseLayout title="Proyectos | ztudio" description="Proyectos y casos del estudio de marketing ztudio.">
+    <section class="pt-40 3xl:pt-52 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div class="mb-20 reveal">
+      <span class="text-primary-fixed font-label-sm text-label-sm tracking-[0.2em] uppercase block mb-4">
+        Portafolio
+      </span>
+            <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-none">Nuestros Proyectos</h1>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-3 gap-10 3xl:gap-12">
+            {
+                proyectos.map((proyecto, i) => (
+                        <a
+                                href={`/proyectos/${proyecto.slug}`}
+                                class="group card-wipe"
+                                style={`transition-delay: ${(i % 3) * 0.12}s`}
+                        >
+                            <div class="relative overflow-hidden rounded-xl aspect-[4/3] mb-6 bg-surface-container">
+                                {proyecto.data.tipo === 'video' ? (
+                                        <video
+                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                muted
+                                                loop
+                                                playsinline
+                                                preload="none"
+                                        >
+                                            <source src={proyecto.data.media} type="video/mp4" />
+                                        </video>
+                                ) : (
+                                        <img
+                                                src={proyecto.data.media}
+                                                alt={proyecto.data.titulo}
+                                                width="1200"
+                                                height="900"
+                                                loading="lazy"
+                                                decoding="async"
+                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                )}
+                                <div class="absolute inset-0 bg-primary-container/0 group-hover:bg-primary-container/10 transition-colors duration-500"></div>
+                            </div>
+
+                            <div class="flex items-center gap-4 mb-2">
+              <span class="px-3 py-1 border border-primary-fixed/40 text-primary-fixed rounded-full font-label-sm text-label-sm uppercase tracking-widest">
+                {proyecto.data.categoria}
+              </span>
+                                <span class="font-body-md text-body-md text-on-surface-variant">
+                {proyecto.data.fecha.getFullYear()}
+              </span>
+                            </div>
+
+                            <h2 class="text-2xl 3xl:text-3xl font-bold group-hover:text-primary-fixed transition-colors">
+                                {proyecto.data.titulo}
+                            </h2>
+                            <p class="text-on-surface-variant mt-2">{proyecto.data.descripcion}</p>
+                        </a>
+                ))
+            }
+        </div>
+    </section>
+</BaseLayout>
