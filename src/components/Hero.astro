@@ -3,40 +3,56 @@ import { site } from '../data/site';
 ---
 
 <header class="relative min-h-screen flex items-end justify-center overflow-hidden pt-20 pb-24">
-  <!-- Video de fondo. Archivo en: public/videos/hero-logo.mp4 -->
   <div class="absolute inset-0 z-0">
-    <video class="w-full h-full object-contain opacity-100" autoplay muted loop playsinline poster={site.heroPoster}>
+    <video
+      id="hero-video"
+      class="w-full h-full object-cover opacity-0 transition-opacity duration-700"
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster={site.heroPoster}
+    >
+      <source src="/videos/hero-logo-mobile.mp4" media="(max-width: 768px)" type="video/mp4" />
       <source src={site.heroVideo} type="video/mp4" />
-      <!-- (Opcional) version webm para mejor compresion:
-      <source src="/videos/hero-logo.webm" type="video/webm" /> -->
     </video>
-    <!-- <div class="absolute inset-0 mesh-gradient"></div> -->
   </div>
 
   <div class="relative z-10 text-center px-margin-mobile max-w-4xl mx-auto reveal">
-    <!--
-    <h1 class="font-display-xl text-display-xl hero-title leading-tight mb-6">
-      DISEÑO QUE TRASCIENDE
-    </h1>
-    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
-      En <span class="text-primary-fixed font-bold">ztudio</span>, transformamos conceptos audaces
-      en realidades digitales de alta precisión. La estética se encuentra con la ingeniería.
-    </p>
-    -->
     <div class="flex flex-col sm:flex-row gap-6 justify-center">
-      <a
-        href="#work"
-        class="bg-primary-container text-on-primary px-8 py-4 rounded-full font-headline-md text-body-md flex items-center justify-center gap-2 sea-green-glow hover:scale-105 transition-transform"
-      >
+      <a href="#work" class="bg-primary-container text-on-primary px-8 py-4 rounded-full font-headline-md text-body-md flex items-center justify-center gap-2 sea-green-glow hover:scale-105 transition-transform">
         Explorar Proyectos
         <span class="material-symbols-outlined">arrow_forward</span>
       </a>
-      <a
-        href="#services"
-        class="border border-outline-variant/40 bg-surface/20 backdrop-blur-md text-primary px-8 py-4 rounded-full font-headline-md text-body-md hover:bg-surface-container-high transition-colors text-center"
-      >
+      <a href="#services" class="border border-outline-variant/40 bg-surface/20 backdrop-blur-md text-primary px-8 py-4 rounded-full font-headline-md text-body-md hover:bg-surface-container-high transition-colors text-center">
         Nuestros Servicios
       </a>
     </div>
   </div>
 </header>
+
+<script>
+  const v = document.getElementById('hero-video') as HTMLVideoElement | null;
+
+  if (v) {
+    v.addEventListener('canplay', function () {
+      v.classList.replace('opacity-0', 'opacity-100');
+    });
+
+    const nav = navigator as any;
+    const c = nav.connection || nav.mozConnection || nav.webkitConnection;
+    const slow = c && (c.saveData || ['slow-2g', '2g', '3g'].indexOf(c.effectiveType) !== -1);
+
+    if (slow) {
+      v.classList.replace('opacity-0', 'opacity-100');
+    } else {
+      v.preload = 'auto';
+      const p = v.play();
+      if (p && p.catch) {
+        p.catch(function () {
+          v.classList.replace('opacity-0', 'opacity-100');
+        });
+      }
+    }
+  }
+</script>

@@ -18,9 +18,8 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  background-image: url('/textures/grain.png');
   opacity: 0.04;
-  filter: contrast(150%) brightness(100%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ===== Mesh gradient (verde de marca #6cbc88) ===== */
@@ -48,13 +47,17 @@ body {
 }
 
 /* ===== Animación reveal al hacer scroll ===== */
-.reveal {
+.reveal { opacity: 1; transform: none; }
+.js .reveal {
   opacity: 0;
   transform: translateY(30px);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.js .reveal.active { opacity: 1; transform: none; }
 
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
+.save-data .grain-overlay { display: none; }
+.save-data .glass-card {
+  backdrop-filter: none;
+  background: rgba(28, 27, 27, 0.85);
 }
+.save-data [class*='marquee'] { animation: none; }

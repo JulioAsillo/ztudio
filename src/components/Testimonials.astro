@@ -15,20 +15,26 @@ import { testimonios } from '../data/testimonios';
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
     {
       testimonios.map((t) => (
-        <article class="glass-card p-8 rounded-xl flex flex-col gap-6 reveal">
-          <span class="material-symbols-outlined text-primary-fixed text-4xl">format_quote</span>
-          <p class="text-on-surface-variant flex-1 leading-relaxed">{t.mensaje}</p>
-          <div class="flex items-center gap-4 pt-4 border-t border-outline-variant/20">
-            {t.avatar ? (
-              <img src={t.avatar} alt={t.nombre} class="w-12 h-12 rounded-full object-cover" />
-            ) : (
-              <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-lg">
-                {t.nombre.charAt(0)}
-              </div>
-            )}
+        <article
+          tabindex="0"
+          class="p-8 rounded-xl flex flex-col gap-6 reveal cursor-pointer transition-all duration-500
+                 bg-primary-container text-on-primary
+                 hover:bg-surface-container-high hover:text-on-surface
+                 focus:bg-surface-container-high focus:text-on-surface
+                 border border-transparent hover:border-outline-variant/20"
+        >
+          <span class="material-symbols-outlined text-4xl text-on-primary
+                       group-hover:text-primary-fixed transition-colors">format_quote</span>
+
+          <p class="flex-1 leading-relaxed transition-colors">{t.mensaje}</p>
+
+          <div class="flex items-center gap-4 pt-4 border-t border-on-primary/20">
+            <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center transition-colors">
+              <span class="material-symbols-outlined text-2xl">person</span>
+            </div>
             <div>
-              <p class="font-bold text-on-surface">{t.nombre}</p>
-              <p class="text-label-sm text-on-surface-variant">{t.cargo}</p>
+              <p class="font-bold">{t.nombre}</p>
+              <p class="text-label-sm opacity-80">{t.cargo}</p>
             </div>
           </div>
         </article>
