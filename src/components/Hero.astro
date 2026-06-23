@@ -12,9 +12,9 @@ import { site } from '../data/site';
       playsinline
       preload="none"
       poster={site.heroPoster}
+      data-desktop={site.heroVideo}
+      data-mobile={site.heroVideoMobile}
     >
-      <source src="/videos/hero-logo-mobile.mp4" media="(max-width: 768px)" type="video/mp4" />
-      <source src={site.heroVideo} type="video/mp4" />
     </video>
   </div>
 
@@ -35,23 +35,46 @@ import { site } from '../data/site';
   const v = document.getElementById('hero-video') as HTMLVideoElement | null;
 
   if (v) {
-    v.addEventListener('canplay', function () {
+    // iOS exige muted como PROPIEDAD para permitir autoplay, no basta el atributo
+    v.muted = true;
+
+    const DESKTOP = v.dataset.desktop || '';
+    const MOBILE = v.dataset.mobile || '';
+    const mq = window.matchMedia('(max-width: 768px)');
+    let current = '';
+
+    const reveal = function () {
       v.classList.replace('opacity-0', 'opacity-100');
-    });
+    };
+    v.addEventListener('canplay', reveal);
+
+    const pick = function () {
+      const wanted = mq.matches ? MOBILE : DESKTOP;
+      if (wanted === current || !wanted) return;
+      current = wanted;
+      v.src = wanted;
+      v.load();
+      const p = v.play();
+      if (p && p.catch) {
+        p.catch(reveal);
+      }
+    };
 
     const nav = navigator as any;
     const c = nav.connection || nav.mozConnection || nav.webkitConnection;
     const slow = c && (c.saveData || ['slow-2g', '2g', '3g'].indexOf(c.effectiveType) !== -1);
 
     if (slow) {
-      v.classList.replace('opacity-0', 'opacity-100');
+      // En conexiones lentas se queda el poster, no se descarga ningun video
+      reveal();
     } else {
       v.preload = 'auto';
-      const p = v.play();
-      if (p && p.catch) {
-        p.catch(function () {
-          v.classList.replace('opacity-0', 'opacity-100');
-        });
+      pick();
+      // Re-evalua al rotar el telefono o cambiar el viewport
+      if (mq.addEventListener) {
+        mq.addEventListener('change', pick);
+      } else {
+        mq.addListener(pick);
       }
     }
   }

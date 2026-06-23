@@ -13,6 +13,7 @@ export const site = {
   // --- Video del Hero (slider 1) ---
   // Coloca el archivo .mp4 en: public/videos/hero-logo.mp4
   heroVideo: '/videos/hero-logo.mp4',
+  heroVideoMobile: '/videos/hero-logo-mobile.mp4',
   // Imagen que se muestra mientras carga el video (public/images/hero-poster.jpg)
   heroPoster: '/images/hero-poster.jpg',
 
