@@ -2,7 +2,7 @@
 import { testimonios } from '../data/testimonios';
 ---
 
-<section id="testimonios" class="py-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<section id="testimonios" class="pt-12 pb-12 md:pt-16 md:pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
   <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal">
     <div>
       <span class="text-primary-fixed font-label-sm text-label-sm tracking-[0.2em] uppercase block mb-4">
@@ -15,29 +15,29 @@ import { testimonios } from '../data/testimonios';
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
     {
       testimonios.map((t) => (
-        <article
-          tabindex="0"
-          class="p-8 rounded-xl flex flex-col gap-6 reveal cursor-pointer transition-all duration-500
+          <article
+              tabindex="0"
+              class="p-8 rounded-xl flex flex-col gap-6 reveal cursor-pointer transition-all duration-500
                  bg-primary-container text-on-primary
                  hover:bg-surface-container-high hover:text-on-surface
                  focus:bg-surface-container-high focus:text-on-surface
                  border border-transparent hover:border-outline-variant/20"
-        >
+          >
           <span class="material-symbols-outlined text-4xl text-on-primary
                        group-hover:text-primary-fixed transition-colors">format_quote</span>
 
-          <p class="flex-1 leading-relaxed transition-colors">{t.mensaje}</p>
+            <p class="flex-1 leading-relaxed transition-colors">{t.mensaje}</p>
 
-          <div class="flex items-center gap-4 pt-4 border-t border-on-primary/20">
-            <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center transition-colors">
-              <span class="material-symbols-outlined text-2xl">person</span>
+            <div class="flex items-center gap-4 pt-4 border-t border-on-primary/20">
+              <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center transition-colors">
+                <span class="material-symbols-outlined text-2xl">person</span>
+              </div>
+              <div>
+                <p class="font-bold">{t.nombre}</p>
+                <p class="text-label-sm opacity-80">{t.cargo}</p>
+              </div>
             </div>
-            <div>
-              <p class="font-bold">{t.nombre}</p>
-              <p class="text-label-sm opacity-80">{t.cargo}</p>
-            </div>
-          </div>
-        </article>
+          </article>
       ))
     }
   </div>
