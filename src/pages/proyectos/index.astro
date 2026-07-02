@@ -96,7 +96,7 @@ const marcas = (await getCollection('portafolio'))
             <div class="mt-10 md:mt-0">
                 {marcas.map((m, i) => (
                         <div data-panel={m.slug} class:list={[{ hidden: i !== 0 }]}>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 items-start">
                                 {m.campanias.map((c) => (
                                         <figure
                                                 class:list={[
@@ -104,26 +104,22 @@ const marcas = (await getCollection('portafolio'))
                                                     c.ancho && "sm:col-span-2",
                                                 ]}
                                         >
-                                            <div class:list={["w-full", c.ancho ? "aspect-[16/10]" : "aspect-[4/3]"]}>
-                                                {c.tipo === 'video' ? (
-                                                        <video
-                                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                                                muted loop playsinline preload="none"
-                                                        >
-                                                            <source src={c.media} type="video/mp4" />
-                                                        </video>
-                                                ) : (
-                                                        <img
-                                                                src={c.media}
-                                                                alt={`${m.marca} — ${c.titulo}`}
-                                                                width="1200"
-                                                                height="900"
-                                                                loading="lazy"
-                                                                decoding="async"
-                                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                                        />
-                                                )}
-                                            </div>
+                                            {c.tipo === 'video' ? (
+                                                    <video
+                                                            class="block w-full h-auto"
+                                                            muted loop playsinline preload="none"
+                                                    >
+                                                        <source src={c.media} type="video/mp4" />
+                                                    </video>
+                                            ) : (
+                                                    <img
+                                                            src={c.media}
+                                                            alt={`${m.marca} — ${c.titulo}`}
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                            class="block w-full h-auto"
+                                                    />
+                                            )}
                                             <figcaption
                                                     class="absolute inset-0 flex items-end p-6
                                  bg-gradient-to-t from-black/85 via-black/20 to-transparent
