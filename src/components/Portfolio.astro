@@ -1,9 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 
-const proyectos = (await getCollection('proyectos'))
-    .filter((p) => p.data.destacado)
-    .sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+const marcas = await getCollection('portafolio');
+
+const destacados = marcas
+    .sort((a, b) => a.data.orden - b.data.orden)
+    .flatMap((m) =>
+        m.data.campanias
+            .filter((c) => c.destacado)
+            .map((c) => ({ ...c, marca: m.data.marca, slug: m.slug }))
+    );
 ---
 
 <section id="work" class="py-32 bg-surface-container-lowest/50">
@@ -23,26 +29,23 @@ const proyectos = (await getCollection('proyectos'))
              [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
     >
       {
-        proyectos.map((proyecto) => (
+        destacados.map((c) => (
             <a
-                href={`/proyectos/${proyecto.slug}`}
+                href={`/proyectos#${c.slug}`}
                 class="group snap-start shrink-0 w-[85%] md:w-[calc(50%-1rem)] reveal"
             >
               <div class="relative overflow-hidden rounded-xl aspect-[4/3] mb-6 bg-surface-container">
-                {proyecto.data.tipo === 'video' ? (
+                {c.tipo === 'video' ? (
                     <video
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        muted
-                        loop
-                        playsinline
-                        preload="metadata"
+                        muted loop playsinline preload="metadata"
                     >
-                      <source src={proyecto.data.media} type="video/mp4" />
+                      <source src={c.media} type="video/mp4" />
                     </video>
                 ) : (
                     <img
-                        src={proyecto.data.media}
-                        alt={proyecto.data.titulo}
+                        src={c.media}
+                        alt={`${c.marca} — ${c.titulo}`}
                         width="1200"
                         height="900"
                         loading="lazy"
@@ -53,9 +56,9 @@ const proyectos = (await getCollection('proyectos'))
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
                   <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                   <span class="text-primary-fixed font-label-sm text-label-sm uppercase tracking-widest">
-                    {proyecto.data.categoria}
+                    {c.marca}
                   </span>
-                    <h4 class="text-2xl font-bold mt-2">{proyecto.data.titulo}</h4>
+                    <h4 class="text-2xl font-bold mt-2">{c.titulo}</h4>
                   </div>
                 </div>
               </div>

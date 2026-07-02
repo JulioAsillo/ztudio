@@ -2,69 +2,226 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const proyectos = (await getCollection('proyectos')).sort(
-    (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf()
-);
+// Precalculamos aqui (TypeScript puro) para que el template solo renderice.
+// 'ancho': la 1ra campaña, o todas si hay 2 o menos, ocupan el ancho completo.
+const marcas = (await getCollection('portafolio'))
+    .sort((a, b) => a.data.orden - b.data.orden)
+    .map((m) => {
+        const total = m.data.campanias.length;
+        return {
+            slug: m.slug,
+            marca: m.data.marca,
+            descripcion: m.data.descripcion,
+            behance: m.data.behance,
+            campanias: m.data.campanias.map((c, j) => ({
+                ...c,
+                ancho: j === 0 || total <= 2,
+            })),
+        };
+    });
 ---
 
-<BaseLayout title="Proyectos | ztudio" description="Proyectos y casos del estudio de marketing ztudio.">
-    <section class="pt-40 3xl:pt-52 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <div class="mb-20 reveal">
+<BaseLayout
+        title="Proyectos | ztudio"
+        description="Portafolio de campañas y proyectos del estudio ztudio."
+>
+    <section
+            id="portafolio-marcas"
+            class="pt-40 3xl:pt-52 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"
+    >
+        <!-- Encabezado -->
+        <div class="mb-14 reveal">
       <span class="text-primary-fixed font-label-sm text-label-sm tracking-[0.2em] uppercase block mb-4">
         Portafolio
       </span>
-            <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-none">Nuestros Proyectos</h1>
+            <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-none">
+                Nuestros Proyectos
+            </h1>
+            <div class="h-px w-full bg-gradient-to-r from-primary-fixed/60 to-transparent mt-8"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-3 gap-10 3xl:gap-12">
-            {
-                proyectos.map((proyecto, i) => (
-                        <a
-                                href={`/proyectos/${proyecto.slug}`}
-                                class="group card-wipe"
-                                style={`transition-delay: ${(i % 3) * 0.12}s`}
-                        >
-                            <div class="relative overflow-hidden rounded-xl aspect-[4/3] mb-6 bg-surface-container">
-                                {proyecto.data.tipo === 'video' ? (
-                                        <video
-                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                                muted
-                                                loop
-                                                playsinline
-                                                preload="none"
+        <!-- Layout: sidebar de marcas + panel de campañas -->
+        <div class="md:grid md:grid-cols-[minmax(0,260px)_1fr] md:gap-12 lg:gap-16">
+
+            <!-- COLUMNA IZQUIERDA -->
+            <div>
+                <!-- Selector de marcas (vertical en desktop, chips scrollables en mobile) -->
+                <nav
+                        class="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0
+                   [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                        aria-label="Marcas"
+                >
+                    {marcas.map((m, i) => (
+                            <button
+                                    type="button"
+                                    data-marca={m.slug}
+                                    aria-selected={i === 0 ? 'true' : 'false'}
+                                    class="shrink-0 md:w-full text-left whitespace-nowrap px-5 py-3 rounded-lg
+                         font-semibold text-base md:text-lg transition-colors
+                         bg-surface-container/60 text-on-surface-variant
+                         hover:text-on-surface hover:bg-surface-container-high/60
+                         aria-selected:bg-surface-container-high aria-selected:text-on-surface aria-selected:font-bold"
+                            >
+                                {m.marca}
+                            </button>
+                    ))}
+                </nav>
+
+                <!-- Descripción + botón Behance (cambia según la marca activa) -->
+                <div class="mt-8 md:mt-12">
+                    {marcas.map((m, i) => (
+                            <div data-info={m.slug} class:list={[{ hidden: i !== 0 }]}>
+                                <p class="font-headline-md text-xl md:text-2xl leading-snug text-primary-fixed mb-6">
+                                    {m.descripcion}
+                                </p>
+                                {m.behance && (
+                                        <a
+                                                href={m.behance}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="inline-flex items-center gap-2 px-5 py-3 rounded-lg
+                               border border-primary-fixed/40 text-primary-fixed font-bold
+                               hover:bg-primary-fixed hover:text-on-primary transition-colors"
                                         >
-                                            <source src={proyecto.data.media} type="video/mp4" />
-                                        </video>
-                                ) : (
-                                        <img
-                                                src={proyecto.data.media}
-                                                alt={proyecto.data.titulo}
-                                                width="1200"
-                                                height="900"
-                                                loading="lazy"
-                                                decoding="async"
-                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                        />
+                                            Ver en Behance
+                                            <span class="material-symbols-outlined text-xl">arrow_outward</span>
+                                        </a>
                                 )}
-                                <div class="absolute inset-0 bg-primary-container/0 group-hover:bg-primary-container/10 transition-colors duration-500"></div>
                             </div>
+                    ))}
+                </div>
+            </div>
 
-                            <div class="flex items-center gap-4 mb-2">
-              <span class="px-3 py-1 border border-primary-fixed/40 text-primary-fixed rounded-full font-label-sm text-label-sm uppercase tracking-widest">
-                {proyecto.data.categoria}
-              </span>
-                                <span class="font-body-md text-body-md text-on-surface-variant">
-                {proyecto.data.fecha.getFullYear()}
-              </span>
+            <!-- COLUMNA DERECHA: paneles de campañas -->
+            <div class="mt-10 md:mt-0">
+                {marcas.map((m, i) => (
+                        <div data-panel={m.slug} class:list={[{ hidden: i !== 0 }]}>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+                                {m.campanias.map((c) => (
+                                        <figure
+                                                class:list={[
+                                                    "bento-item group relative overflow-hidden rounded-xl bg-surface-container",
+                                                    c.ancho && "sm:col-span-2",
+                                                ]}
+                                        >
+                                            <div class:list={["w-full", c.ancho ? "aspect-[16/10]" : "aspect-[4/3]"]}>
+                                                {c.tipo === 'video' ? (
+                                                        <video
+                                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                                muted loop playsinline preload="none"
+                                                        >
+                                                            <source src={c.media} type="video/mp4" />
+                                                        </video>
+                                                ) : (
+                                                        <img
+                                                                src={c.media}
+                                                                alt={`${m.marca} — ${c.titulo}`}
+                                                                width="1200"
+                                                                height="900"
+                                                                loading="lazy"
+                                                                decoding="async"
+                                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                        />
+                                                )}
+                                            </div>
+                                            <figcaption
+                                                    class="absolute inset-0 flex items-end p-6
+                                 bg-gradient-to-t from-black/85 via-black/20 to-transparent
+                                 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                            >
+                                                <div class="translate-y-3 group-hover:translate-y-0 transition-transform duration-500">
+                                                    <h3 class="text-lg md:text-xl font-bold text-on-surface">{c.titulo}</h3>
+                                                    <p class="text-sm text-on-surface-variant mt-1">{c.descripcion}</p>
+                                                </div>
+                                            </figcaption>
+                                        </figure>
+                                ))}
                             </div>
-
-                            <h2 class="text-2xl 3xl:text-3xl font-bold group-hover:text-primary-fixed transition-colors">
-                                {proyecto.data.titulo}
-                            </h2>
-                            <p class="text-on-surface-variant mt-2">{proyecto.data.descripcion}</p>
-                        </a>
-                ))
-            }
+                        </div>
+                ))}
+            </div>
         </div>
     </section>
 </BaseLayout>
+
+<style>
+    /* Reveal desde la esquina superior-izquierda.
+       Para cambiar de esquina, mueve qué lados llevan el 100%:
+         abajo-izquierda -> inset(100% 100% 0 0)
+         arriba-derecha  -> inset(0 0 100% 100%) */
+    .bento-item { clip-path: inset(0 0 0 0); }
+
+    :global(html.js) .bento-item {
+        clip-path: inset(0 100% 100% 0);
+        transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: clip-path;
+    }
+    :global(html.js) .bento-item.is-in {
+        clip-path: inset(0 0 0 0);
+    }
+
+    /* Accesibilidad / conexiones lentas: sin animación */
+    :global(html.save-data) .bento-item {
+        clip-path: none !important;
+        transition: none !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .bento-item { clip-path: none !important; transition: none !important; }
+    }
+</style>
+
+<script>
+    const section = document.getElementById('portafolio-marcas');
+    if (section) {
+        const buttons = Array.from(section.querySelectorAll<HTMLElement>('[data-marca]'));
+        const panels = Array.from(section.querySelectorAll<HTMLElement>('[data-panel]'));
+        const infos = Array.from(section.querySelectorAll<HTMLElement>('[data-info]'));
+
+        const toggle = (nodes: HTMLElement[], key: string, attr: 'panel' | 'info') =>
+            nodes.forEach((n) => n.classList.toggle('hidden', n.dataset[attr] !== key));
+
+        const playWipe = (key: string) => {
+            const panel = panels.find((p) => p.dataset.panel === key);
+            if (!panel) return;
+            panel.querySelectorAll<HTMLElement>('.bento-item').forEach((item, i) => {
+                item.classList.remove('is-in');
+                void item.offsetWidth; // reflow: reinicia la animación
+                item.style.transitionDelay = `${i * 0.09}s`; // stagger, editable
+                item.classList.add('is-in');
+            });
+        };
+
+        const activate = (key: string, animate: boolean) => {
+            buttons.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.marca === key)));
+            toggle(panels, key, 'panel');
+            toggle(infos, key, 'info');
+            if (animate) playWipe(key);
+        };
+
+        buttons.forEach((b) =>
+            b.addEventListener('click', () => {
+                if (b.dataset.marca) activate(b.dataset.marca, true);
+            })
+        );
+
+        // Preselección por hash (#pyc, #medik, #tehno) al llegar desde el home
+        const fromHash = buttons.find((b) => b.dataset.marca === location.hash.slice(1));
+        const initial = fromHash?.dataset.marca ?? buttons[0]?.dataset.marca;
+        if (initial) activate(initial, false);
+
+        // Dispara el wipe cuando la sección entra en viewport (una sola vez)
+        const io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((e) => {
+                    if (e.isIntersecting) {
+                        const active = buttons.find((b) => b.getAttribute('aria-selected') === 'true');
+                        if (active?.dataset.marca) playWipe(active.dataset.marca);
+                        io.disconnect();
+                    }
+                });
+            },
+            { threshold: 0.15 }
+        );
+        io.observe(section);
+    }
+</script>

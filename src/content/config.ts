@@ -1,22 +1,29 @@
 import { defineCollection, z } from 'astro:content';
 
-const proyectos = defineCollection({
+const portafolio = defineCollection({
   type: 'content',
   schema: z.object({
-    titulo: z.string(),
-    categoria: z.string(),
+    marca: z.string(),
+    // Orden en el que aparecen las marcas en el sidebar (menor = primero)
+    orden: z.number().default(99),
+    // Texto descriptivo de la marca (el bloque en verde del diseno)
     descripcion: z.string(),
-    // 'imagen' o 'video' segun el tipo de media del proyecto
-    tipo: z.enum(['imagen', 'video']).default('imagen'),
-    // Para 'imagen': ruta local en /public (ej '/images/portafolio/proyecto-01.jpg')
-    // Para 'video': ENLACE externo (ej 'https://...mp4' o embed)
-    media: z.string(),
-    // Link de Behance del proyecto -> AQUI VA EL ENLACE DE BEHANCE
+    // Galeria de Behance de ESTA marca -> aqui va el enlace
     behance: z.string().url().optional(),
-    // true = aparece en el slider del home
-    destacado: z.boolean().default(false),
-    fecha: z.date(),
+    campanias: z
+        .array(
+            z.object({
+              titulo: z.string(),
+              descripcion: z.string(),
+              tipo: z.enum(['imagen', 'video']).default('imagen'),
+              // 'imagen': ruta local en /public | 'video': enlace .mp4 externo
+              media: z.string(),
+              // true = tambien aparece en el slider del home
+              destacado: z.boolean().default(false),
+            })
+        )
+        .min(1),
   }),
 });
 
-export const collections = { proyectos };
+export const collections = { portafolio };
