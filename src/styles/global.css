@@ -29,11 +29,18 @@ body {
           radial-gradient(at 0% 0%, rgba(108, 188, 136, 0.10) 0%, transparent 40%);
 }
 
-/* ===== Glassmorphism (#2a2a2a) ===== */
+/* ===== Glassmorphism (#2a2a2a) =====
+   Blur reducido 20px -> 10px. El backdrop-filter re-muestrea lo que hay
+   DETRAS de la tarjeta en cada frame; su costo escala con el radio. Con 7
+   glass-cards juntas en Servicios, 20px saturaba al compositor y hacia que
+   el cursor se sintiera pesado justo en esa seccion. A 10px el efecto glass
+   se ve casi igual y el compositor trabaja mucho menos.
+   Si aun asi notas jank, comenta el backdrop-filter y sube la opacidad del
+   fondo a ~0.85 para simular el glass sin re-muestreo. */
 .glass-card {
   background: rgba(42, 42, 42, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(246, 246, 246, 0.06);
 }
 

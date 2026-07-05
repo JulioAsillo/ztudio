@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // Precalculamos aqui (TypeScript puro) para que el template solo renderice.
-// 'ancho': la 1ra campaña, o todas si hay 2 o menos, ocupan el ancho completo.
+// 'ancho': la 1ra campaña, o todas si hay 2 o menos, ocupan el ancho completo
+// y se muestran en formato editorial horizontal (imagen + texto al lado).
 const marcas = (await getCollection('portafolio'))
     .sort((a, b) => a.data.orden - b.data.orden)
     .map((m) => {
@@ -16,6 +17,7 @@ const marcas = (await getCollection('portafolio'))
             campanias: m.data.campanias.map((c, j) => ({
                 ...c,
                 ancho: j === 0 || total <= 2,
+                indice: String(j + 1).padStart(2, '0'), // 01, 02, 03 ...
             })),
         };
     });
@@ -100,35 +102,110 @@ const marcas = (await getCollection('portafolio'))
                                 {m.campanias.map((c) => (
                                         <figure
                                                 class:list={[
-                                                    "bento-item group relative overflow-hidden rounded-xl bg-surface-container",
-                                                    c.ancho && "sm:col-span-2",
+                                                    "bento-item group relative flex flex-col overflow-hidden rounded-xl",
+                                                    "bg-surface-container border border-white/[0.06]",
+                                                    "transition-colors duration-500 hover:border-primary-fixed/30",
+                                                    // La campaña destacada (ancho) usa layout horizontal en sm+
+                                                    c.ancho && "sm:col-span-2 sm:flex-row",
                                                 ]}
                                         >
-                                            {c.tipo === 'video' ? (
-                                                    <video
-                                                            class="block w-full h-auto"
-                                                            muted loop playsinline preload="none"
-                                                    >
-                                                        <source src={c.media} type="video/mp4" />
-                                                    </video>
-                                            ) : (
-                                                    <img
-                                                            src={c.media}
-                                                            alt={`${m.marca} — ${c.titulo}`}
-                                                            loading="lazy"
-                                                            decoding="async"
-                                                            class="block w-full h-auto"
-                                                    />
-                                            )}
-                                            <figcaption
-                                                    class="absolute inset-0 flex items-end p-6
-                                 bg-gradient-to-t from-black/85 via-black/20 to-transparent
-                                 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                            <!-- MARCO DE MEDIA: destacada con proporción fija (object-cover);
+                                                 normales a alto natural (object-contain, imagen completa) -->
+                                            <div
+                                                    class:list={[
+                                                        "relative overflow-hidden bg-surface-container-high flex items-center",
+                                                        // Card destacada: ocupa ~55% del ancho y alto completo en sm+ (usa object-cover).
+                                                        // Card normal: SIN proporción fija -> el alto lo define la imagen a
+                                                        // tamaño natural, así se ve completa sin recortar (object-contain).
+                                                        c.ancho && "aspect-[4/3] sm:aspect-auto sm:w-[55%] sm:min-h-[300px]",
+                                                    ]}
                                             >
-                                                <div class="translate-y-3 group-hover:translate-y-0 transition-transform duration-500">
-                                                    <h3 class="text-lg md:text-xl font-bold text-on-surface">{c.titulo}</h3>
-                                                    <p class="text-sm text-on-surface-variant mt-1">{c.descripcion}</p>
-                                                </div>
+                                                {c.tipo === 'video' ? (
+                                                        <video
+                                                                class:list={[
+                                                                    "block w-full transition-transform duration-700 group-hover:scale-[1.03]",
+                                                                    c.ancho ? "h-full object-cover" : "h-auto object-contain",
+                                                                ]}
+                                                                muted loop playsinline preload="none"
+                                                        >
+                                                            <source src={c.media} type="video/mp4" />
+                                                        </video>
+                                                ) : (
+                                                        <img
+                                                                src={c.media}
+                                                                alt={`${m.marca} — ${c.titulo}`}
+                                                                loading="lazy"
+                                                                decoding="async"
+                                                                class:list={[
+                                                                    "block w-full transition-transform duration-700 group-hover:scale-[1.03]",
+                                                                    // Destacada: llena el marco (recorta un poco).
+                                                                    // Normal: alto natural, imagen completa SIN recortar.
+                                                                    c.ancho ? "h-full object-cover" : "h-auto object-contain",
+                                                                ]}
+                                                        />
+                                                )}
+
+                                                <!-- Índice editorial (01, 02, 03...) -->
+                                                <span
+                                                        class="absolute top-4 left-4 font-headline-md text-xs font-bold
+                                   px-2.5 py-1 rounded-full bg-black/55 backdrop-blur-sm
+                                   text-primary-fixed tracking-wider"
+                                                >
+                                                    {c.indice}
+                                                </span>
+
+                                                <!-- Etiqueta 'Destacado' solo en la campaña ancho -->
+                                                {c.destacado && (
+                                                        <span
+                                                                class="absolute top-4 right-4 font-label-sm text-label-sm uppercase
+                                     px-3 py-1 rounded-full bg-primary-fixed text-on-primary font-bold"
+                                                        >
+                                                            Destacado
+                                                        </span>
+                                                )}
+                                            </div>
+
+                                            <!-- TEXTO SIEMPRE VISIBLE -->
+                                            <figcaption
+                                                    class:list={[
+                                                        "relative flex flex-col gap-2 p-6",
+                                                        c.ancho && "sm:flex-1 sm:justify-center sm:p-8 sm:gap-3",
+                                                    ]}
+                                            >
+                                                <!-- Número fantasma grande (recurso de marca, Alfa Slab One) -->
+                                                {c.ancho && (
+                                                        <span
+                                                                aria-hidden="true"
+                                                                class="pointer-events-none select-none absolute -top-2 right-4
+                                     font-display-xl text-6xl md:text-7xl leading-none
+                                     text-primary-fixed/10"
+                                                        >
+                                                            {c.indice}
+                                                        </span>
+                                                )}
+
+                                                <h3
+                                                        class:list={[
+                                                            "font-headline-md text-on-surface leading-tight",
+                                                            c.ancho ? "text-2xl md:text-3xl" : "text-lg md:text-xl",
+                                                        ]}
+                                                >
+                                                    {c.titulo}
+                                                </h3>
+                                                <p
+                                                        class:list={[
+                                                            "font-body-md text-on-surface-variant leading-relaxed",
+                                                            c.ancho ? "text-sm md:text-base" : "text-sm",
+                                                        ]}
+                                                >
+                                                    {c.descripcion}
+                                                </p>
+
+                                                <!-- Línea de acento que crece en hover -->
+                                                <span
+                                                        class="mt-1 h-px w-10 bg-primary-fixed/60
+                                   transition-all duration-500 group-hover:w-20"
+                                                ></span>
                                             </figcaption>
                                         </figure>
                                 ))}
@@ -141,22 +218,26 @@ const marcas = (await getCollection('portafolio'))
 </BaseLayout>
 
 <style>
-    /* Reveal desde la esquina superior-izquierda.
-       Para cambiar de esquina, mueve qué lados llevan el 100%:
-         abajo-izquierda -> inset(100% 100% 0 0)
-         arriba-derecha  -> inset(0 0 100% 100%) */
+    /* Wipe editorial desde la esquina superior-izquierda.
+       CLAVE DE ROBUSTEZ: por defecto las tarjetas están VISIBLES.
+       Solo se ocultan (para animar) cuando el JS agrega la clase .wipe-on a la
+       sección — cosa que hace únicamente si va a controlar la animación. Así,
+       si el JS falla, no corre, o el navegador tiene JS viejo cacheado, las
+       tarjetas SIEMPRE se ven (nunca queda el panel en blanco). */
     .bento-item { clip-path: inset(0 0 0 0); }
 
-    :global(html.js) .bento-item {
-        clip-path: inset(0 100% 100% 0);
+    :global(#portafolio-marcas.wipe-on) .bento-item {
         transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         will-change: clip-path;
     }
-    :global(html.js) .bento-item.is-in {
-        clip-path: inset(0 0 0 0);
+    :global(#portafolio-marcas.wipe-on) .bento-item:not(.is-in) {
+        /* Estado oculto (pre-wipe). Para cambiar la esquina de origen:
+           abajo-izquierda -> inset(100% 100% 0 0)
+           arriba-derecha  -> inset(0 0 100% 100%) */
+        clip-path: inset(0 100% 100% 0);
     }
 
-    /* Accesibilidad / conexiones lentas: sin animación */
+    /* Accesibilidad / conexiones lentas: sin animación, siempre visibles */
     :global(html.save-data) .bento-item {
         clip-path: none !important;
         transition: none !important;
@@ -176,48 +257,87 @@ const marcas = (await getCollection('portafolio'))
         const toggle = (nodes: HTMLElement[], key: string, attr: 'panel' | 'info') =>
             nodes.forEach((n) => n.classList.toggle('hidden', n.dataset[attr] !== key));
 
-        const playWipe = (key: string) => {
-            const panel = panels.find((p) => p.dataset.panel === key);
-            if (!panel) return;
-            panel.querySelectorAll<HTMLElement>('.bento-item').forEach((item, i) => {
-                item.classList.remove('is-in');
-                void item.offsetWidth; // reflow: reinicia la animación
-                item.style.transitionDelay = `${i * 0.09}s`; // stagger, editable
-                item.classList.add('is-in');
-            });
+        // ¿Animamos? Solo si no hay reduced-motion ni save-data.
+        const animate =
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+            !document.documentElement.classList.contains('save-data');
+
+        // Habilita el estado oculto (pre-wipe) SOLO ahora que el JS lo controla.
+        // Si el JS no llega aquí, .wipe-on nunca se agrega y las tarjetas se ven.
+        if (animate) section.classList.add('wipe-on');
+
+        const reveal = (item: HTMLElement, delay = 0) => {
+            item.style.transitionDelay = `${delay}s`;
+            item.classList.add('is-in');
         };
 
-        const activate = (key: string, animate: boolean) => {
+        // Observer solo para las tarjetas que quedan DEBAJO del fold: cada una
+        // hace su wipe al entrar en viewport.
+        const io = new IntersectionObserver(
+            (entries) => {
+                let d = 0;
+                entries.forEach((e) => {
+                    if (!e.isIntersecting) return;
+                    reveal(e.target as HTMLElement, d);
+                    d += 0.08;
+                    io.unobserve(e.target);
+                });
+            },
+            { threshold: 0.15 }
+        );
+
+        const showPanel = (key: string) => {
+            if (!animate) return; // sin animación, las tarjetas ya están visibles
+
+            const panel = panels.find((p) => p.dataset.panel === key);
+            if (!panel) return;
+            const items = Array.from(panel.querySelectorAll<HTMLElement>('.bento-item'));
+
+            // Reset
+            items.forEach((it) => {
+                it.classList.remove('is-in');
+                it.style.transitionDelay = '';
+                io.unobserve(it);
+            });
+
+            // Las que YA están en viewport se revelan de inmediato (no dependen
+            // del observer). Las de más abajo se observan y animan al bajar.
+            let d = 0;
+            items.forEach((it) => {
+                const r = it.getBoundingClientRect();
+                const inView = r.top < window.innerHeight && r.bottom > 0;
+                if (inView) {
+                    reveal(it, d);
+                    d += 0.08;
+                } else {
+                    io.observe(it);
+                }
+            });
+
+            // Red de seguridad: si algo quedara oculto (timing raro), se revela.
+            window.setTimeout(() => {
+                items.forEach((it) => {
+                    if (!it.classList.contains('is-in')) reveal(it);
+                });
+            }, 1200);
+        };
+
+        const activate = (key: string) => {
             buttons.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.marca === key)));
             toggle(panels, key, 'panel');
             toggle(infos, key, 'info');
-            if (animate) playWipe(key);
+            showPanel(key);
         };
 
         buttons.forEach((b) =>
             b.addEventListener('click', () => {
-                if (b.dataset.marca) activate(b.dataset.marca, true);
+                if (b.dataset.marca) activate(b.dataset.marca);
             })
         );
 
         // Preselección por hash (#pyc, #medik, #tehno) al llegar desde el home
         const fromHash = buttons.find((b) => b.dataset.marca === location.hash.slice(1));
         const initial = fromHash?.dataset.marca ?? buttons[0]?.dataset.marca;
-        if (initial) activate(initial, false);
-
-        // Dispara el wipe cuando la sección entra en viewport (una sola vez)
-        const io = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((e) => {
-                    if (e.isIntersecting) {
-                        const active = buttons.find((b) => b.getAttribute('aria-selected') === 'true');
-                        if (active?.dataset.marca) playWipe(active.dataset.marca);
-                        io.disconnect();
-                    }
-                });
-            },
-            { threshold: 0.15 }
-        );
-        io.observe(section);
+        if (initial) activate(initial);
     }
 </script>
