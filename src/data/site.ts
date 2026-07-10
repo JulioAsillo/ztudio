@@ -7,7 +7,7 @@ export const site = {
   // --- WhatsApp (boton de testimonios) ---
   // Numero en formato internacional SIN +, espacios ni guiones.
   // Ej Peru: 51 + numero  ->  '51999888777'
-  whatsapp: '51999888777',
+  whatsapp: '51997847876',
   whatsappMensaje: 'Hola, vengo de la web y quiero mas informacion.',
 
   // --- Video del Hero (slider 1) ---
@@ -24,5 +24,5 @@ export const site = {
 
 // URL final del boton de WhatsApp (no editar)
 export const whatsappURL = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(
-  site.whatsappMensaje
+    site.whatsappMensaje
 )}`;
