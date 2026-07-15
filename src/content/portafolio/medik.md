@@ -18,5 +18,6 @@ campanias:
     descripcion: "Propuesta para el Día Internacional de la Mujer con enfoque en innovación y liderazgo femenino. Estética contemporánea que resalta el talento, la diversidad y el aporte de las mujeres."
     tipo: "imagen"
     media: "/images/portafolio/medik/8m-innovador.webp"
+    mediaHome: "/images/portafolio/medik/home/8m-innovador-4x3.webp"
     destacado: true
 ---

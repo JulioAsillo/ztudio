@@ -16,8 +16,13 @@ const portafolio = defineCollection({
               titulo: z.string(),
               descripcion: z.string(),
               tipo: z.enum(['imagen', 'video']).default('imagen'),
+              // PIEZA ORIGINAL, en su proporcion real (hoy: 1080 x 1350, 4:5).
+              // Se usa en /proyectos y se muestra completa, sin recortar.
               // 'imagen': ruta local en /public | 'video': enlace .mp4 externo
               media: z.string(),
+              // RECORTE 4:3 (1600 x 1200) SOLO para el carrusel del home.
+              // Opcional: si no se define, el home usa 'media' como respaldo.
+              mediaHome: z.string().optional(),
               // true = tambien aparece en el slider del home
               destacado: z.boolean().default(false),
             })

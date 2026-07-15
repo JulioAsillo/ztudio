@@ -8,6 +8,7 @@ campanias:
     descripcion: "Propuesta gráfica alineada con la identidad visual de PYC, que conecta el valor de la protección con el rol de los padres, manteniendo el lenguaje cercano y humano de la marca."
     tipo: "imagen"
     media: "/images/portafolio/pyc/dia-del-padre.webp"
+    mediaHome: "/images/portafolio/pyc/home/dia-del-padre-4x3.webp"
     destacado: true
   - titulo: "Campaña Día del Trabajo"
     descripcion: "Pieza que refuerza el compromiso de PYC con las personas que impulsan cada organización. Integra modelado 3D, elemento distintivo de la marca, respetando su paleta y lineamientos."

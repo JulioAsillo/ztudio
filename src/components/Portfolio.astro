@@ -3,12 +3,20 @@ import { getCollection } from 'astro:content';
 
 const marcas = await getCollection('portafolio');
 
+// El home muestra SIEMPRE un marco 4:3 uniforme (vitrina).
+// Usamos 'mediaHome' (el recorte 4:3 que nos pasaron); si una campaña todavia
+// no lo tiene, caemos a 'media' para no romper el render.
 const destacados = marcas
     .sort((a, b) => a.data.orden - b.data.orden)
     .flatMap((m) =>
         m.data.campanias
             .filter((c) => c.destacado)
-            .map((c) => ({ ...c, marca: m.data.marca, slug: m.slug }))
+            .map((c) => ({
+              ...c,
+              src: c.mediaHome ?? c.media,
+              marca: m.data.marca,
+              slug: m.slug,
+            }))
     );
 ---
 
@@ -37,21 +45,21 @@ const destacados = marcas
               <div class="relative overflow-hidden rounded-xl aspect-[4/3] mb-6 bg-surface-container">
                 {c.tipo === 'video' ? (
                     <video
-                        class="w-full h-full object-contain"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         muted
                         loop
                         playsinline
                         preload="metadata"
                     >
-                      <source src={c.media} type="video/mp4" />
+                      <source src={c.src} type="video/mp4" />
                     </video>
                 ) : (
                     <img
-                        src={c.media}
+                        src={c.src}
                         alt={`${c.marca} — ${c.titulo}`}
                         loading="lazy"
                         decoding="async"
-                        class="w-full h-full object-contain"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                 )}
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
