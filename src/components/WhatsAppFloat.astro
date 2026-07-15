@@ -18,9 +18,8 @@ import { whatsappURL } from '../data/site';
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.999-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
     </svg>
 
-    <!-- Balon Trionda (estado en movimiento) -->
-    <!-- Coloca la imagen en: public/images/balon-trionda.webp  (cuadrada, fondo transparente, 256x256) -->
-    <!-- Balón Trionda SVG (estado en movimiento) -->
+    <!-- Balon generico de marca (estado en movimiento) -->
+    <!-- Diseno propio en la paleta de ztudio: sin logos ni marcas de terceros. -->
     <svg
         class="ball-icon absolute inset-0 w-full h-full pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
@@ -31,101 +30,43 @@ import { whatsappURL } from '../data/site';
         <clipPath id="ballClip">
           <circle cx="100" cy="100" r="96"/>
         </clipPath>
-        <radialGradient id="redGrad" cx="45%" cy="38%" r="55%">
-          <stop offset="0%" stop-color="#ff3030"/>
-          <stop offset="65%" stop-color="#cc0d0d"/>
-          <stop offset="100%" stop-color="#8b0000"/>
-        </radialGradient>
-        <radialGradient id="greenGrad" cx="50%" cy="55%" r="55%">
-          <stop offset="0%" stop-color="#00e855"/>
-          <stop offset="60%" stop-color="#009a2c"/>
-          <stop offset="100%" stop-color="#004d15"/>
-        </radialGradient>
-        <radialGradient id="blueGrad" cx="50%" cy="50%" r="55%">
-          <stop offset="0%" stop-color="#2299ff"/>
-          <stop offset="60%" stop-color="#005fcc"/>
-          <stop offset="100%" stop-color="#003080"/>
-        </radialGradient>
         <radialGradient id="sphereShade" cx="36%" cy="30%" r="72%">
           <stop offset="0%" stop-color="rgba(255,255,255,0.40)"/>
           <stop offset="45%" stop-color="rgba(255,255,255,0.06)"/>
-          <stop offset="100%" stop-color="rgba(0,0,0,0.28)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
         </radialGradient>
-        <pattern id="zigRed" x="0" y="0" width="10" height="6" patternUnits="userSpaceOnUse">
-          <polyline points="0,6 5,0 10,6" fill="none" stroke="rgba(120,0,0,0.4)" stroke-width="0.7"/>
-        </pattern>
-        <pattern id="zigGreen" x="0" y="0" width="10" height="6" patternUnits="userSpaceOnUse">
-          <polyline points="0,6 5,0 10,6" fill="none" stroke="rgba(0,80,0,0.4)" stroke-width="0.7"/>
-        </pattern>
-        <pattern id="zigBlue" x="0" y="0" width="10" height="6" patternUnits="userSpaceOnUse">
-          <polyline points="0,6 5,0 10,6" fill="none" stroke="rgba(0,30,120,0.4)" stroke-width="0.7"/>
-        </pattern>
       </defs>
 
-      <!-- Base blanca -->
-      <circle cx="100" cy="100" r="96" fill="#f5f5f5"/>
+      <!-- Base verde salvia de marca -->
+      <circle cx="100" cy="100" r="96" fill="#6cbc88"/>
 
       <g clip-path="url(#ballClip)">
-        <!-- Zona roja (arriba-izquierda) -->
-        <ellipse cx="68" cy="65" rx="72" ry="62" fill="url(#redGrad)" transform="rotate(-18 68 65)"/>
-        <ellipse cx="68" cy="65" rx="72" ry="62" fill="url(#zigRed)" opacity="0.55" transform="rotate(-18 68 65)"/>
+        <!-- Paneles pentagonales (patron clasico de balon) -->
+        <polygon points="100.0,74.0 124.7,92.0 115.3,121.0 84.7,121.0 75.3,92.0" fill="#0b0b0b"/>
+        <polygon points="100.0,54.0 75.3,36.0 84.7,7.0 115.3,7.0 124.7,36.0" fill="#0b0b0b"/>
+        <polygon points="143.7,85.8 153.2,56.7 183.8,56.7 193.2,85.8 168.5,103.8" fill="#0b0b0b"/>
+        <polygon points="127.0,137.2 157.6,137.2 167.0,166.3 142.3,184.2 117.6,166.3" fill="#0b0b0b"/>
+        <polygon points="73.0,137.2 82.4,166.3 57.7,184.2 33.0,166.3 42.4,137.2" fill="#0b0b0b"/>
+        <polygon points="56.3,85.8 31.5,103.8 6.8,85.8 16.2,56.7 46.8,56.7" fill="#0b0b0b"/>
 
-        <!-- Zona verde (abajo-centro) -->
-        <ellipse cx="88" cy="158" rx="80" ry="52" fill="url(#greenGrad)" transform="rotate(3 88 158)"/>
-        <ellipse cx="88" cy="158" rx="80" ry="52" fill="url(#zigGreen)" opacity="0.55" transform="rotate(3 88 158)"/>
-
-        <!-- Zona azul (derecha) -->
-        <ellipse cx="162" cy="108" rx="55" ry="70" fill="url(#blueGrad)" transform="rotate(10 162 108)"/>
-        <ellipse cx="162" cy="108" rx="55" ry="70" fill="url(#zigBlue)" opacity="0.55" transform="rotate(10 162 108)"/>
-
-        <!-- Panel central blanco (curva S) -->
-        <path d="M 48 22 C 72 8, 118 18, 138 52 C 162 92, 158 138, 136 164 C 114 190, 62 195, 38 168 C 14 142, 12 78, 48 22 Z"
-              fill="white" opacity="0.90"/>
-
-        <!-- Líneas doradas de acento -->
-        <path d="M24 72 C48 62, 76 72, 98 96 C116 118, 118 146, 104 165"
-              fill="none" stroke="#c8960a" stroke-width="1.3" opacity="0.65"/>
-        <path d="M14 96 C38 88, 66 96, 88 120 C106 142, 108 170, 96 186"
-              fill="none" stroke="#c8960a" stroke-width="1.3" opacity="0.65"/>
-
-        <!-- Tres rayas Adidas -->
-        <g transform="translate(80, 56) rotate(-8)">
-          <rect x="0"  y="0" width="9"  height="48" rx="4.5" fill="white" stroke="#e0e0e0" stroke-width="0.5"/>
-          <rect x="13" y="0" width="9"  height="48" rx="4.5" fill="white" stroke="#e0e0e0" stroke-width="0.5"/>
-          <rect x="26" y="0" width="9"  height="48" rx="4.5" fill="white" stroke="#e0e0e0" stroke-width="0.5"/>
+        <!-- Costuras entre paneles -->
+        <g stroke="#0b0b0b" stroke-width="2.5" fill="none" opacity="0.85">
+          <line x1="100" y1="74" x2="100" y2="54"/>
+          <line x1="124.7" y1="92" x2="143.7" y2="85.8"/>
+          <line x1="115.3" y1="121" x2="127" y2="137.2"/>
+          <line x1="84.7" y1="121" x2="73" y2="137.2"/>
+          <line x1="75.3" y1="92" x2="56.3" y2="85.8"/>
         </g>
 
-        <!-- Logotipo FIFA -->
-        <g transform="translate(134, 85)">
-          <rect x="0" y="0" width="34" height="13" rx="2.5" fill="white" opacity="0.95"/>
-          <text x="17" y="10" font-family="Arial Black,sans-serif" font-size="7.5"
-                font-weight="900" fill="#003087" text-anchor="middle">FIFA</text>
-          <path d="M10 15 L24 15 L23 19 L22 22 L12 22 L11 19 Z" fill="white" opacity="0.9"/>
-          <rect x="9" y="23" width="16" height="2.5" rx="1" fill="white" opacity="0.9"/>
-          <text x="17" y="33" font-family="Arial,sans-serif" font-size="5.5"
-                fill="#ffd700" text-anchor="middle">★★★★</text>
-        </g>
-
-        <!-- Texto TRIONDA -->
-        <g transform="translate(42, 160) rotate(4)">
-          <text font-family="Arial Black,Impact,sans-serif" font-size="10.5" font-weight="900"
-                fill="white" letter-spacing="0.8" stroke="#004010" stroke-width="2.5"
-                style="paint-order:stroke">TRIONDA</text>
-        </g>
-        <g transform="translate(42, 160) rotate(4)">
-          <text font-family="Arial Black,Impact,sans-serif" font-size="10.5" font-weight="900"
-                fill="#00dd44" letter-spacing="0.8">TRIONDA</text>
-        </g>
-
-        <!-- Shading esférico 3D -->
+        <!-- Shading esferico 3D -->
         <circle cx="100" cy="100" r="96" fill="url(#sphereShade)"/>
 
         <!-- Brillo superior -->
-        <ellipse cx="68" cy="56" rx="30" ry="19" fill="white" opacity="0.20" transform="rotate(-28 68 56)"/>
+        <ellipse cx="68" cy="56" rx="30" ry="19" fill="white" opacity="0.18" transform="rotate(-28 68 56)"/>
       </g>
 
       <!-- Borde exterior -->
-      <circle cx="100" cy="100" r="96" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+      <circle cx="100" cy="100" r="96" fill="none" stroke="#0b0b0b" stroke-width="2" opacity="0.5"/>
     </svg>
   </span>
 </a>

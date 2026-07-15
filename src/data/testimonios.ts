@@ -22,4 +22,14 @@ export const testimonios: Testimonio[] = [
     cargo: 'Coordinadora de Gestión y Mejora',
     mensaje: `El equipo se encargó del diseño, producción y difusión de contenidos para comunicar los logros de nuestra certificación ISO 9001:2015 e ISO 37001:2025, con videos dinámicos y afiches de alta calidad. Demostraron profesionalismo, creatividad y cumplimiento estricto de plazos, clave para el éxito de la campaña. Recomiendo sus servicios con total seguridad.`,
   },
+  {
+    nombre: 'Carmen Manrique V.',
+    cargo: 'Gerente de Operaciones, Medi-K S.A.C.',
+    mensaje: `A través de la empresa en donde laboro, Ztudio nos brindó servicio de diseño gráfico, fotografía, video y publicidad digital, y la experiencia con ellos fue excelente en calidad, puntualidad y asesoría personalizada. Quedamos satisfechos, lo volveremos a contratar.`,
+  },
+  {
+    nombre: 'Alejandro Arévalo',
+    cargo: 'CEO & Founder, Novaly',
+    mensaje: `Trabajar con Ztudio Agencia ha sido una experiencia muy positiva desde el inicio. Destaco especialmente su capacidad para entender nuestro negocio, aterrizar nuestras ideas y convertirlas en una estrategia de contenido alineada con los objetivos de Novaly. El equipo demuestra creatividad, compromiso y una gran disposición para escuchar, proponer y ajustar cada detalle. Más que limitarse a diseñar publicaciones, buscan comprender la marca y construir una comunicación con propósito. Recomiendo a Ztudio por su profesionalismo, cercanía y dedicación en cada etapa del trabajo.`,
+  },
 ];

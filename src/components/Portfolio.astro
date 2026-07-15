@@ -4,8 +4,8 @@ import { getCollection } from 'astro:content';
 const marcas = await getCollection('portafolio');
 
 // El home muestra SIEMPRE un marco 4:3 uniforme (vitrina).
-// Usamos 'mediaHome' (el recorte 4:3 que nos pasaron); si una campaña todavia
-// no lo tiene, caemos a 'media' para no romper el render.
+// Usamos 'mediaHome' (el recorte 4:3); si una campaña todavia no lo tiene,
+// caemos a 'media' para no romper el render.
 const destacados = marcas
     .sort((a, b) => a.data.orden - b.data.orden)
     .flatMap((m) =>
@@ -21,7 +21,7 @@ const destacados = marcas
 ---
 
 <section id="work" class="py-32 bg-surface-container-lowest/50">
-  <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+  <div class="px-margin-mobile md:px-margin-desktop max-w-container-max 3xl:max-w-[1800px] mx-auto">
     <div class="flex justify-between items-center mb-16 reveal">
       <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-none">Selección Creativa</h2>
       <a
@@ -32,48 +32,152 @@ const destacados = marcas
       </a>
     </div>
 
-    <div
-        class="flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6
-             [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-    >
-      {
-        destacados.map((c) => (
-            <a
-                href={`/proyectos#${c.slug}`}
-                class="group snap-start shrink-0 w-[85%] md:w-[calc(50%-1rem)] reveal"
-            >
-              <div class="relative overflow-hidden rounded-xl aspect-[4/3] mb-6 bg-surface-container">
-                {c.tipo === 'video' ? (
-                    <video
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        muted
-                        loop
-                        playsinline
-                        preload="metadata"
-                    >
-                      <source src={c.src} type="video/mp4" />
-                    </video>
-                ) : (
-                    <img
-                        src={c.src}
-                        alt={`${c.marca} — ${c.titulo}`}
-                        loading="lazy"
-                        decoding="async"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                )}
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-                  <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <span class="text-primary-fixed font-label-sm text-label-sm uppercase tracking-widest">
-                    {c.marca}
-                  </span>
-                    <h4 class="text-2xl font-bold mt-2">{c.titulo}</h4>
+    <!-- Carrusel con flechas en los bordes (mismo patron que ServicesCarousel) -->
+    <div class="relative group/carousel">
+      <!-- Pista -->
+      <div
+          id="work-track"
+          class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6
+               [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
+               cursor-grab active:cursor-grabbing"
+      >
+        {
+          destacados.map((c) => (
+              <a
+                  href={`/proyectos#${c.slug}`}
+                  draggable="false"
+                  class="group snap-start shrink-0 w-[85%] sm:w-[60%] lg:w-[31%] reveal"
+              >
+                <div class="relative overflow-hidden rounded-xl bg-surface-container aspect-[4/3]">
+                  {c.tipo === 'video' ? (
+                      <video
+                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          muted
+                          loop
+                          playsinline
+                          preload="metadata"
+                      >
+                        <source src={c.src} type="video/mp4" />
+                      </video>
+                  ) : (
+                      <img
+                          src={c.src}
+                          alt={`${c.marca} — ${c.titulo}`}
+                          loading="lazy"
+                          decoding="async"
+                          draggable="false"
+                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                  )}
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+                    <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <span class="text-primary-fixed font-label-sm text-label-sm uppercase tracking-widest">
+                      {c.marca}
+                    </span>
+                      <h4 class="text-2xl font-bold mt-2">{c.titulo}</h4>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </a>
-        ))
-      }
+              </a>
+          ))
+        }
+      </div>
+
+      <!-- Degradados sutiles en los bordes -->
+      <div class="hidden md:block absolute left-0 top-0 bottom-6 w-20 bg-gradient-to-r from-background to-transparent pointer-events-none z-[5]"></div>
+      <div class="hidden md:block absolute right-0 top-0 bottom-6 w-20 bg-gradient-to-l from-background to-transparent pointer-events-none z-[5]"></div>
+
+      <!-- Flecha izquierda (invisible hasta hover) -->
+      <button
+          id="work-prev"
+          aria-label="Anterior"
+          class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
+               w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
+               items-center justify-center text-on-surface
+               opacity-0 group-hover/carousel:opacity-100 transition-all
+               hover:bg-primary-container hover:text-on-primary hover:border-primary-container"
+      >
+        <span class="material-symbols-outlined">west</span>
+      </button>
+
+      <!-- Flecha derecha (invisible hasta hover) -->
+      <button
+          id="work-next"
+          aria-label="Siguiente"
+          class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
+               w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
+               items-center justify-center text-on-surface
+               opacity-0 group-hover/carousel:opacity-100 transition-all
+               hover:bg-primary-container hover:text-on-primary hover:border-primary-container"
+      >
+        <span class="material-symbols-outlined">east</span>
+      </button>
     </div>
   </div>
 </section>
+
+<script>
+  const track = document.getElementById('work-track');
+  const prev = document.getElementById('work-prev');
+  const next = document.getElementById('work-next');
+
+  if (track) {
+    // Arrastrar con el mouse.
+    // OJO: aqui las tarjetas son enlaces, asi que hay que distinguir
+    // "arrastrar" de "hacer clic" o el navegador se va a /proyectos al soltar.
+    const DRAG_THRESHOLD = 6; // px
+    let isDown = false, moved = false, startX = 0, scrollLeft = 0;
+
+    track.addEventListener('pointerdown', (e) => {
+      isDown = true;
+      moved = false;
+      startX = e.pageX;
+      scrollLeft = track.scrollLeft;
+      track.setPointerCapture(e.pointerId);
+    });
+
+    track.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > DRAG_THRESHOLD) moved = true;
+      track.scrollLeft = scrollLeft - dx;
+    });
+
+    const stop = () => (isDown = false);
+    track.addEventListener('pointerup', stop);
+    track.addEventListener('pointerleave', stop);
+
+    // Si fue arrastre, cancela la navegacion del enlace.
+    track.addEventListener('click', (e) => {
+      if (moved) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    // Cuanto avanzar por clic
+    const amount = () => {
+      const card = track.firstElementChild as HTMLElement | null;
+      return card ? card.clientWidth + 24 : track.clientWidth * 0.8; // 24 = gap-6
+    };
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+    // Flecha derecha: si esta al final, vuelve al inicio (loop)
+    next?.addEventListener('click', () => {
+      if (track.scrollLeft >= maxScroll() - 5) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: amount(), behavior: 'smooth' });
+      }
+    });
+
+    // Flecha izquierda: si esta al inicio, salta al final (loop)
+    prev?.addEventListener('click', () => {
+      if (track.scrollLeft <= 5) {
+        track.scrollTo({ left: maxScroll(), behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: -amount(), behavior: 'smooth' });
+      }
+    });
+  }
+</script>

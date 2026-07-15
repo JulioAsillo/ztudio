@@ -13,5 +13,6 @@ campanias:
     descripcion: "Propuesta con ilustración 3D que representa el ciclo de vida de los sistemas tecnológicos. Estética futurista que transmite la necesidad de actualización y evolución digital."
     tipo: "imagen"
     media: "/images/portafolio/tehno/tu-sistema-envejece.webp"
+    mediaHome: "/images/portafolio/tehno/home/tu-sistema-envejece-4x3.webp"
     destacado: true
 ---
