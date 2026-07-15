@@ -2,7 +2,7 @@
 import { testimonios } from '../data/testimonios';
 ---
 
-<section id="testimonios" class="pt-12 pb-12 md:pt-16 md:pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<section id="testimonios" class="pt-12 pb-12 md:pt-16 md:pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max 3xl:max-w-[1800px] mx-auto">
   <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal">
     <div>
       <span class="text-primary-fixed font-label-sm text-label-sm tracking-[0.2em] uppercase block mb-4">
@@ -12,37 +12,194 @@ import { testimonios } from '../data/testimonios';
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-    {
-      testimonios.map((t) => (
-          <article
-              tabindex="0"
-              class="p-8 rounded-xl flex flex-col gap-6 reveal cursor-pointer transition-all duration-500
-                 bg-primary-container text-on-primary
-                 hover:bg-surface-container-high hover:text-on-surface
-                 focus:bg-surface-container-high focus:text-on-surface
-                 border border-transparent hover:border-outline-variant/20"
-          >
-          <span class="material-symbols-outlined text-4xl text-on-primary
-                       group-hover:text-primary-fixed transition-colors">format_quote</span>
+  <!-- Carrusel con snap scroll y avance automatico.
+       Mismo patron que ServicesCarousel: arrastre + flechas al hover. -->
+  <div class="relative group/carousel">
+    <!-- Pista -->
+    <div
+        id="testi-track"
+        class="flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6
+             [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
+             cursor-grab active:cursor-grabbing"
+    >
+      {
+        testimonios.map((t) => (
+            <article
+                tabindex="0"
+                class="group/card snap-start shrink-0 w-[85%] sm:w-[70%] lg:w-[45%] 3xl:w-[31%]
+                   p-8 rounded-xl flex flex-col gap-6 reveal cursor-pointer transition-all duration-500
+                   bg-primary-container text-on-primary
+                   hover:bg-surface-container-high hover:text-on-surface
+                   focus:bg-surface-container-high focus:text-on-surface
+                   border border-transparent hover:border-outline-variant/20"
+            >
+              <span class="material-symbols-outlined text-4xl text-on-primary
+                         group-hover/card:text-primary-fixed transition-colors">format_quote</span>
 
-            <div class="flex-1 flex flex-col gap-4 leading-relaxed transition-colors">
-              {t.mensaje.split(/\n\s*\n/).map((parrafo) => (
-                  <p>{parrafo}</p>
-              ))}
-            </div>
+              <div class="flex-1 flex flex-col gap-4 leading-relaxed transition-colors">
+                {t.mensaje.split(/\n\s*\n/).map((parrafo) => (
+                    <p>{parrafo}</p>
+                ))}
+              </div>
 
-            <div class="flex items-center gap-4 pt-4 border-t border-on-primary/20">
-              <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center transition-colors">
-                <span class="material-symbols-outlined text-2xl">person</span>
+              <div class="flex items-center gap-4 pt-4 border-t border-on-primary/20">
+                {t.avatar ? (
+                    <img
+                        src={t.avatar}
+                        alt={t.nombre}
+                        width="56"
+                        height="56"
+                        loading="lazy"
+                        decoding="async"
+                        draggable="false"
+                        class="w-14 h-14 rounded-full object-cover shrink-0
+                             ring-2 ring-on-primary/25 group-hover/card:ring-primary-fixed/60
+                             transition-all duration-500"
+                    />
+                ) : (
+                    <div class="w-14 h-14 rounded-full bg-on-primary/15 flex items-center justify-center shrink-0 transition-colors">
+                      <span class="material-symbols-outlined text-2xl">person</span>
+                    </div>
+                )}
+                <div>
+                  <p class="font-bold">{t.nombre}</p>
+                  <p class="text-label-sm opacity-80">{t.cargo}</p>
+                </div>
               </div>
-              <div>
-                <p class="font-bold">{t.nombre}</p>
-                <p class="text-label-sm opacity-80">{t.cargo}</p>
-              </div>
-            </div>
-          </article>
-      ))
-    }
+            </article>
+        ))
+      }
+    </div>
+
+    <!-- Degradados sutiles en los bordes -->
+    <div class="hidden md:block absolute left-0 top-0 bottom-6 w-20 bg-gradient-to-r from-background to-transparent pointer-events-none z-[5]"></div>
+    <div class="hidden md:block absolute right-0 top-0 bottom-6 w-20 bg-gradient-to-l from-background to-transparent pointer-events-none z-[5]"></div>
+
+    <!-- Flecha izquierda (invisible hasta hover) -->
+    <button
+        id="testi-prev"
+        aria-label="Testimonio anterior"
+        class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
+             w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
+             items-center justify-center text-on-surface
+             opacity-0 group-hover/carousel:opacity-100 transition-all
+             hover:bg-primary-container hover:text-on-primary hover:border-primary-container"
+    >
+      <span class="material-symbols-outlined">west</span>
+    </button>
+
+    <!-- Flecha derecha (invisible hasta hover) -->
+    <button
+        id="testi-next"
+        aria-label="Siguiente testimonio"
+        class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
+             w-12 h-12 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30
+             items-center justify-center text-on-surface
+             opacity-0 group-hover/carousel:opacity-100 transition-all
+             hover:bg-primary-container hover:text-on-primary hover:border-primary-container"
+    >
+      <span class="material-symbols-outlined">east</span>
+    </button>
   </div>
 </section>
+
+<script>
+  // ====== AJUSTES ======
+  const AUTO_MS = 6500;   // cada cuanto avanza solo (ms)
+  const RESUME_MS = 9000; // cuanto espera tras una interaccion manual
+  // =====================
+
+  const track = document.getElementById('testi-track');
+  const prev = document.getElementById('testi-prev');
+  const next = document.getElementById('testi-next');
+
+  if (track) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = document.documentElement.classList.contains('save-data');
+    const autoOK = !reduce && !saveData;
+
+    const amount = () => {
+      const card = track.firstElementChild as HTMLElement | null;
+      return card ? card.clientWidth + 24 : track.clientWidth * 0.8; // 24 = gap-6
+    };
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+    const goNext = () => {
+      if (track.scrollLeft >= maxScroll() - 5) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: amount(), behavior: 'smooth' });
+      }
+    };
+    const goPrev = () => {
+      if (track.scrollLeft <= 5) {
+        track.scrollTo({ left: maxScroll(), behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: -amount(), behavior: 'smooth' });
+      }
+    };
+
+    // ---- Avance automatico ----
+    let timer = 0;
+    let resumeTimer = 0;
+    let paused = false;
+
+    const start = () => {
+      if (!autoOK || timer) return;
+      timer = window.setInterval(() => {
+        if (!paused && !document.hidden) goNext();
+      }, AUTO_MS);
+    };
+    const stop = () => {
+      if (timer) { clearInterval(timer); timer = 0; }
+    };
+
+    // Tras tocar algo, se calla un rato y luego retoma
+    const pauseAndResume = () => {
+      paused = true;
+      if (resumeTimer) clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => { paused = false; }, RESUME_MS);
+    };
+
+    // Pausa mientras el mouse esta encima o hay foco de teclado
+    track.addEventListener('mouseenter', () => { paused = true; });
+    track.addEventListener('mouseleave', () => { paused = false; });
+    track.addEventListener('focusin', () => { paused = true; });
+    track.addEventListener('focusout', () => { paused = false; });
+    // En tactil, el scroll manual manda
+    track.addEventListener('touchstart', pauseAndResume, { passive: true });
+
+    // No gastar bateria en una pestana oculta
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop(); else start();
+    });
+
+    // Solo corre cuando la seccion esta a la vista
+    const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => (e.isIntersecting ? start() : stop())),
+        { threshold: 0.2 }
+    );
+    io.observe(track);
+
+    // ---- Arrastrar con el mouse ----
+    let isDown = false, startX = 0, scrollLeft = 0;
+    track.addEventListener('pointerdown', (e) => {
+      isDown = true;
+      startX = e.pageX;
+      scrollLeft = track.scrollLeft;
+      track.setPointerCapture(e.pointerId);
+      pauseAndResume();
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      track.scrollLeft = scrollLeft - (e.pageX - startX);
+    });
+    const release = () => (isDown = false);
+    track.addEventListener('pointerup', release);
+    track.addEventListener('pointerleave', release);
+
+    // ---- Flechas ----
+    next?.addEventListener('click', () => { pauseAndResume(); goNext(); });
+    prev?.addEventListener('click', () => { pauseAndResume(); goPrev(); });
+  }
+</script>
