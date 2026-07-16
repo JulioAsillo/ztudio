@@ -13,4 +13,5 @@ export const marcas: Marca[] = [
   { nombre: 'Medika', logo: '/images/marcas/Medika.svg' },
   { nombre: 'PYC', logo: '/images/marcas/PYC.svg' },
   { nombre: 'Tehno', logo: '/images/marcas/Tehno.svg' },
+  { nombre: 'Novaly', logo: '/images/marcas/novaly.svg' },
 ];
